@@ -1,0 +1,86 @@
+Protel Design System Design Rule Check
+PCB File : C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\57\Item.PcbDoc
+Date     : 2020/6/1
+Time     : 14:17:07
+
+Processing Rule : Short-Circuit Constraint (Allowed=No) (All),(All)
+Rule Violations :0
+
+Processing Rule : Un-Routed Net Constraint ( (All) )
+Rule Violations :0
+
+Processing Rule : Power Plane Connect Rule(Relief Connect )(Expansion=0.508mm) (Conductor Width=0.254mm) (Air Gap=0.254mm) (Entries=4) (All)
+Rule Violations :0
+
+Processing Rule : Width Constraint (Min=0.16mm) (Max=5mm) (Preferred=0.25mm) (All)
+Rule Violations :0
+
+Processing Rule : Height Constraint (Min=0mm) (Max=25.4mm) (Prefered=12.7mm) (All)
+Rule Violations :0
+
+Processing Rule : Hole Size Constraint (Min=0.3mm) (Max=5mm) (All)
+Rule Violations :0
+
+Processing Rule : Hole To Hole Clearance (Gap=0.16mm) (All),(All)
+Rule Violations :0
+
+Processing Rule : Minimum Solder Mask Sliver (Gap=0mm) (All),(All)
+Rule Violations :0
+
+Processing Rule : Silkscreen Over Component Pads (Clearance=0.1mm) (All),(All)
+   Violation between Text "VCC" (42.7mm,105.5mm)  Top Overlay and 
+                     Pad F1-1(47.26mm,106.25mm)  Top Layer
+   Violation between Text "GND" (42.75mm,102.95mm)  Top Overlay and 
+                     Pad D3-1(47.275mm,103.75mm)  Top Layer
+   Violation between Text "VCC" (42.7mm,105.5mm)  Top Overlay and 
+                     Pad P3-1(40mm,106.25mm)  Top Layer
+   Violation between Track (31.99999mm,90mm)(35.65mm,90mm)  Top Overlay and 
+                     Pad P3-(34mm,90.75mm)  Top Layer
+   Violation between Track (31.99999mm,90mm)(36.99999mm,90mm)  Top Overlay and 
+                     Pad P3-(34mm,90.75mm)  Top Layer
+   Violation between Track (31.99999mm,110mm)(35.75mm,110mm)  Top Overlay and 
+                     Pad P3-(34mm,109.25mm)  Top Layer
+   Violation between Track (31.99999mm,110mm)(37mm,110mm)  Top Overlay and 
+                     Pad P3-(34mm,109.25mm)  Top Layer
+   Violation between Track (53.65mm,80.2mm)(53.65mm,100.25mm)  Top Overlay and 
+                     Pad U3-8(54.6mm,91.405mm)  Top Layer
+   Violation between Track (53.65mm,80.2mm)(53.65mm,100.25mm)  Top Overlay and 
+                     Pad U3-7(54.6mm,90.135mm)  Top Layer
+   Violation between Track (53.65mm,80.2mm)(53.65mm,100.25mm)  Top Overlay and 
+                     Pad U3-6(54.6mm,88.865mm)  Top Layer
+   Violation between Track (53.65mm,80.2mm)(53.65mm,100.25mm)  Top Overlay and 
+                     Pad U3-5(54.6mm,87.595mm)  Top Layer
+   Violation between Text "校正" (62.8mm,94.2mm)  Top Overlay and 
+                     Pad S1-7(63.81mm,95.936mm)  Top Layer
+   Violation between Text "细分1" (54.5mm,94.1mm)  Top Overlay and 
+                     Pad S1-1(56.19mm,95.936mm)  Top Layer
+   Violation between Text "细分2" (57.45mm,94.1mm)  Top Overlay and 
+                     Pad S1-3(58.73mm,95.936mm)  Top Layer
+   Violation between Text "闭环" (60.45001mm,94.15mm)  Top Overlay and 
+                     Pad S1-5(61.27mm,95.936mm)  Top Layer
+   Violation between Track (67.5mm,123mm)(67.5mm,128.00001mm)  Top Overlay and 
+                     Pad P2-(66.75mm,126mm)  Top Layer
+   Violation between Track (67.5mm,124.25mm)(67.5mm,128.00001mm)  Top Overlay and 
+                     Pad P2-(66.75mm,126mm)  Top Layer
+   Violation between Track (60.6mm,126.25mm)(71mm,126.25mm)  Top Overlay and 
+                     Pad P2-(66.75mm,126mm)  Top Layer
+   Violation between Track (52.5mm,123mm)(52.5mm,128mm)  Top Overlay and 
+                     Pad P2-(53.25mm,126mm)  Top Layer
+   Violation between Track (52.5mm,124.35mm)(52.5mm,128mm)  Top Overlay and 
+                     Pad P2-(53.25mm,126mm)  Top Layer
+   Violation between Track (49mm,126.25mm)(59.4mm,126.25mm)  Top Overlay and 
+                     Pad P2-(53.25mm,126mm)  Top Layer
+Rule Violations :21
+
+Processing Rule : Silk to Silk (Clearance=0mm) (All),(All)
+Rule Violations :0
+
+Processing Rule : Net Antennae (Tolerance=0mm) (All)
+Rule Violations :0
+
+Processing Rule : Clearance Constraint (Gap=0.15mm) (All),(All)
+Rule Violations :0
+
+
+Violations Detected : 21
+Time Elapsed        : 00:00:01

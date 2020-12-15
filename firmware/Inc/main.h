@@ -17,6 +17,7 @@
 #include "stm32f0xx_ll_usart.h"
 #include "stm32f0xx_ll_gpio.h"
 #include "math.h"
+#include "stdio.h"
 
 
 #define MISO_Pin LL_GPIO_PIN_6
@@ -40,7 +41,7 @@
 #define ENIN_Pin LL_GPIO_PIN_2
 #define ENIN_GPIO_Port GPIOB
 #define ENIN_EXTI_IRQn EXTI2_3_IRQn
-#define LED_Pin LL_GPIO_PIN_11
+#define LED_Pin LL_GPIO_PIN_11  
 #define LED_GPIO_Port GPIOB
 #define PWM1_Pin LL_GPIO_PIN_4
 #define PWM1_GPIO_Port GPIOB
@@ -95,56 +96,36 @@
 #define NSS_H   LL_GPIO_SetOutputPin(NSS_GPIO_Port, NSS_Pin)  
 #define NSS_L   LL_GPIO_ResetOutputPin(NSS_GPIO_Port, NSS_Pin) 
 
-#define SPI_TX_OD  LL_GPIO_SetPinOutputType(MOSI_GPIO_Port, MOSI_Pin, LL_GPIO_OUTPUT_OPENDRAIN)
-#define SPI_TX_PP  LL_GPIO_SetPinOutputType(MOSI_GPIO_Port, MOSI_Pin, LL_GPIO_OUTPUT_PUSHPULL)
+
+#define UMAXCL   250    //闭环模式最大电流设置，0.1欧姆采样电阻255对应3.3A电流
+#define UMAXOP   160    //开环模式最大电流设置，0.1欧姆采样电阻255对应3.3A电流
+#define UMAXSUM  32000  //闭环模式最大电流x128，用于积分项目饱和限制
 
 
-/* SPI command for TLE5012 */
-#define READ_STATUS				0x8001			//8000
-#define READ_ANGLE_VALUE		0x8021			//8020
-#define READ_SPEED_VALUE		0x8031			//8030
+extern int16_t kp;     
+extern int16_t ki;
+extern int16_t kd;
 
-#define WRITE_MOD1_VALUE		0x5060			//0_1010_0_000110_0001
-#define MOD1_VALUE	0x0001
+extern const uint8_t LPFA; 
+extern const uint8_t LPFB;
 
-#define WRITE_MOD2_VALUE		0x5080			//0_1010_0_001000_0001
-#define MOD2_VALUE	0x0800
 
-#define WRITE_MOD3_VALUE		0x5091			//0_1010_0_001001_0001
-#define MOD3_VALUE	0x0000
-
-#define WRITE_MOD4_VALUE		0x50E0			//0_1010_0_001110_0001
-#define MOD4_VALUE	0x0098						//9bit 512
-
-#define WRITE_IFAB_VALUE		0x50B1
-#define IFAB_VALUE 0x000D
-/* Functionality mode */
-#define REFERESH_ANGLE		0
-
-extern float kp;     
-extern float ki;
-extern float kd;
-
-extern const float LPFA; 
-extern const float LPFB;
-
-extern const uint8_t UMAXCL;   
-extern const uint8_t UMAXOP; 
-
-extern float r;   //setpoint
-extern float r_1;   //setpoint
+extern int32_t s;
+extern int32_t s_1;
+extern int32_t s_sum;
+extern int32_t r;   
+extern int32_t r_1;   
 extern uint8_t dir; 
-extern float y;   // measured angle
-extern float y_1;
-extern float yw;  // "wrapped" angle (not limited to 0-360)
-extern float yw_1;
+extern int16_t y;   
+extern int16_t y_1;
+extern int32_t yw;  
+extern int32_t yw_1;
+extern int32_t advance;
 extern int32_t wrap_count; 
-extern float e;   // e = r-yw (error)
-extern float p;   // proportional effort
-extern float i;   // integral effort
-extern float iterm;
-extern float dterm;
-extern float u;     //real control effort (not abs)
+extern int32_t e;  
+extern int32_t iterm;
+extern int32_t dterm;
+extern int32_t u;     
 extern int32_t stepnumber;
 extern float stepangle;
 
@@ -152,8 +133,7 @@ extern uint16_t hccount;
 extern uint8_t closemode;
 extern uint8_t enmode;
 
-extern void Output(float theta,uint8_t effort);
-extern uint16_t ReadValue(uint16_t RegValue);
+extern void Output(int32_t theta,uint8_t effort);
 extern uint16_t ReadAngle(void);
 
 

@@ -1,0 +1,420 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html">
+<style type="text/css">
+		h1, h2, h3, h4, h5, h6 {
+			font-family : sans-serif;
+			color : white;
+			background-color : #21489e;
+			padding: 0.3em;
+		}
+		body {
+			font-family : verdana;
+		}
+		td, th {
+			padding: 0.5em;
+			text-align : center;
+			width : 18%;
+		}
+		th {
+			background-color : #A6CAF0;
+
+		}
+		th.column1, td.column1 {
+			text-align: left;
+			width : auto;
+		}
+		table {
+			width : 100%;
+		}
+		
+		.DRC_summary_header {							
+			padding-bottom : 0.1em;
+			border : 0px solid black;							
+			width: 100%;
+                        align: right;
+                        
+		}
+
+		.DRC_summary_header_col1, 
+		.DRC_summary_header_col2, 
+		.DRC_summary_header_col3
+		{
+			color : black;
+			font-size:150%;
+                        padding : 0em;
+			padding-top : 0.2em;
+			padding-bottom 0.2: 0em;
+			border : 0px solid black;
+			width : auto;
+			vertical-align: top;
+			font-weight: bold;				
+		}
+		
+		.DRC_summary_header_col1 	
+		{		                       
+			text-align: right;
+                        width: auto;	
+		}
+
+		.DRC_summary_header_col2 	
+		{		
+			text-align: center;	
+		}
+
+		.DRC_summary_header_col3 	
+		{		
+			text-align: left;	
+		}
+
+
+		
+		.header_holder
+		{
+		Width = 100%;
+		border = 0px solid green;
+		padding = 0;
+		}
+		
+		
+		
+		.front_matter, .front_matter_column1, .front_matter_column2, .front_matter_column3
+                {
+			left:0;
+			top:0;
+			padding-top : 0.1em;			
+			border : 0px solid black;
+			width : 100%;
+			vertical-align: top
+
+		}
+		.front_matter {	
+			
+			margin-top: 5px;
+ 			margin-left: 0px;					 			
+ 			horizontal-align: left;
+		}
+				
+		
+		.front_matter_column1 {
+			width : 10em;	
+			text-align  : right;
+			padding-right:0.1em;
+			
+		}
+		
+		.front_matter_column2 {
+                        width: 0.1em;
+			align: center;
+			text-align : center;
+			margin-right  : 0.1em;	
+			margin-left   : 0.1em;
+		}
+		.front_matter_column3 {
+			width         : auto;  
+			text-align    : left;	
+			margin-right  : 0.5em;				
+		}
+		
+		.total_column1, .total_column {
+			font-weight : bold;
+		}
+		.total_column1 {
+			text-align : right;
+		}
+		.warning, .error {
+			color : red;
+			font-weight : bold;
+		}
+		tr.onmouseout_odd {
+			background-color : #EEEEE0 
+		}
+		tr.onmouseout_even { 
+			background-color : #F3F3E3   
+		}
+		tr.onmouseover_odd, tr.onmouseover_even { 
+			background-color : lightYellow
+		} 
+		a:link, a:visited, .q a:link,.q a:active,.q {
+			color: #21489e; 
+		}
+		a:link.callback, a:visited.callback { 
+			color: #008000 
+		}
+		a:link.customize, a:visited.customize {
+			color: #C0C0C0;
+			position: absolute; 
+			right: 10px;
+		}	
+		p.contents_level1 {
+			font-weight : bold;
+			font-size : 110%;
+			margin : 0.5em;
+		}
+		p.contents_level2 {
+			position : relative;
+			left : 20px;
+			margin : 0.5em;
+		}
+	</style><script type="text/javascript">
+		function coordToMils(coord) {
+			var number = coord / 10000;
+			
+			if (number != number.toFixed(3))
+				number = number.toFixed(3);
+
+			return number + 'mil'
+		}
+
+		function coordToMM(coord) {
+			var number = 0.0254 * coord / 10000;
+			
+			if (number != number.toFixed(4))
+				number = number.toFixed(4);
+			
+			return number + 'mm'
+		}
+	
+		function convertCoord(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);
+			}
+
+			var coord = coordNode.getAttribute('value');
+			if (coord != null) {
+				if (units == 'mm') {
+					textNode = document.createTextNode(coordToMM(coord));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(coordToMils(coord));		
+					coordNode.appendChild(textNode);	
+				}
+			}
+		}
+	
+		function convertUnits(unitNode, units) {
+			for (var i = 0; i < unitNode.childNodes.length; i++) {
+				unitNode.removeChild(unitNode.childNodes[i]);		
+			}
+		
+			textNode = document.createTextNode(units); 
+			unitNode.appendChild(textNode);
+		}
+	
+		function changeUnits(radio_input, units) {
+			if (radio_input.checked) {
+			
+				var elements = document.getElementsByName('coordinate');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertCoord(elements[i], units);
+					}
+				}
+	
+				var elements = document.getElementsByName('units');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertUnits(elements[i], units);
+					}
+				}
+			}
+		}
+	</script><title>Design Rule Verification Report</title>
+</head>
+<body onload=""><img ALT="Altium" src="
+			file://C:\Users\Public\Documents\Altium\AD 10\Templates\AD-rgb_logo_223x64.gif
+		"><a href="dxpprocess://Client:SetupPreferences?Server=PCB|PageName=Reports" class="customize"><acronym title="dxpprocess://Client:SetupPreferences?Server=PCB|PageName=Reports">customize</acronym></a><h1>Design Rule Verification Report</h1>
+<table class="header_holder">
+<td Style="width:70%">
+<table class="front_matter">
+<tr class="front_matter">
+<td class="front_matter_column1">Date</td>
+<td class="front_matter_column2">:</td>
+<td class="front_matter_column3">2020/6/8</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Time</td>
+<td class="front_matter_column2">:</td>
+<td class="front_matter_column3">20:48:51</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Elapsed Time</td>
+<td class="front_matter_column2">:</td>
+<td class="front_matter_column3">00:00:01</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Filename</td>
+<td class="front_matter_column2">:</td>
+<td class="front_matter_column3"><a href="file:///C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc" class="file"><acronym title="C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc">C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc</acronym></a></td>
+</tr>
+</table>
+</td>
+<td Style="Width:30%">
+<table class="DRC_summary_header">
+<tr>
+<td class="DRC_summary_header_col1">Warnings</td>
+<td class="DRC_summary_header_col2">:</td>
+<td class="DRC_summary_header_col3">0</td></tr>
+<tr>
+<td class="DRC_summary_header_col1">Rule Violations</td>
+<td class="DRC_summary_header_col2">:</td>
+<td class="DRC_summary_header_col3" style="color : red">21</td></tr>
+</table>
+</td>
+</table>
+<hr><a name="IDEPAYLJTLQU4CMXFBG0VLMWLUDHY0OU53E2OMR4OGU14OHOFA2IWG"><h2>Summary</h2></a><table>
+<tr>
+<th class="column1">Warnings</th>
+<th class="column2">Count</th>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">0</td>
+</tr>
+</table><br><table>
+<tr>
+<th class="column1">Rule Violations</th>
+<th class="column2">Count</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDX1KOWFGTCVSECDN2PA0NA4RF3DAZDP33WNH1HKP1Z3XVOUQDMBFE">Net Antennae (Tolerance=0mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDUHULCTGYQTAJGTT332C4MOBL0MX4RA1A0JWBPHDTLI2UJPNST4DO">Silk to Silk (Clearance=0mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDZYCXOXVOX1CRDMRMZLIBKGP3ZJWEVVBGMUAOTNICXXXW1WBJUAWK">Silkscreen Over Component Pads (Clearance=0.1mm) (All),(All)</a></td>
+<td class="column2">21</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDOVM3TEALF1JGD5AJB3EF411VGIJRJDMVZY1FRSOMG2RNPRTEYCAG">Minimum Solder Mask Sliver (Gap=0mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDODK1VSAPWYUCIAFR0IHPXP2I3MJRH4KHQEENPYCK5123AQMR3C5N">Hole To Hole Clearance (Gap=0.16mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDNTO2QOOCWI4HH3CZZRROD5UI2H3PLFGKVXW4U5KAF15GH2VIKVQI">Hole Size Constraint (Min=0.3mm) (Max=5mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDUQYAWZRFYKF0CIJWAJFGAHXBGM2KYVMDWSD54IN4SNWIBSAZMGID">Height Constraint (Min=0mm) (Max=25.4mm) (Prefered=12.7mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDCQTMUAGR31TSPVWE15LSM2IN4ODC2OTBZFI0K5BKTZBOSIRRV1ZG">Width Constraint (Min=0.16mm) (Max=5mm) (Preferred=0.25mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDVENBES4IBG1HL45QDGN2LLQOPCUC44Z1EWK4O0JBOIUZHYF42FSG">Power Plane Connect Rule(Relief Connect )(Expansion=0.508mm) (Conductor Width=0.254mm) (Air Gap=0.254mm) (Entries=4) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID44ENC3THF4TECARDBZMCMYBVPJUTKSAWXMVSQEILCV3VTS33XADL">Un-Routed Net Constraint ( (All) )</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDDQ302NGDOJTQNOTXPSN2RC0DTLOEZB3VLDQU0VMGYV5UBYQNP2MF">Short-Circuit Constraint (Allowed=No) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDLXDMUNZ1IHNVHNNFKU3EYGUFTOKXZBAM44AXZUIAL4Y0W4PNLUUJ">Clearance Constraint (Gap=0.15mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">21</td>
+</tr>
+</table><br><hr><a name="IDZYCXOXVOX1CRDMRMZLIBKGP3ZJWEVVBGMUAOTNICXXXW1WBJUAWK"><table>
+<tr>
+<th style="text-align : left" colspan="2" class="rule">Silkscreen Over Component Pads (Clearance=0.1mm) (All),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2321mil|Location2.X=2356.559mil|Location1.Y=4175.213mil|Location2.Y=4246.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2321mil|Location2.X=2356.559mil|Location1.Y=4175.213mil|Location2.Y=4246.205mil|Absolute=True">Pad U2-4(59.405mm,106.952mm)  Top Layer</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2328.74mil|Location2.X=2352.362mil|Location1.Y=4220.472mil|Location2.Y=4244.095mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2328.74mil|Location2.X=2352.362mil|Location1.Y=4220.472mil|Location2.Y=4244.095mil|Absolute=True">Arc (59.45mm,107.5mm)  Top Overlay</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2017.913mil|Location2.X=2025.787mil|Location1.Y=4279.528mil|Location2.Y=4381.89mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2017.913mil|Location2.X=2025.787mil|Location1.Y=4279.528mil|Location2.Y=4381.89mil|Absolute=True">Track (51.355mm,108.8mm)(51.355mm,111.2mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1944.819mil|Location2.X=2031.559mil|Location1.Y=4375.921mil|Location2.Y=4462.662mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1944.819mil|Location2.X=2031.559mil|Location1.Y=4375.921mil|Location2.Y=4462.662mil|Absolute=True">Pad C1-1(50.5mm,112.25mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1964.567mil|Location2.X=2025.787mil|Location1.Y=4374.016mil|Location2.Y=4381.89mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1964.567mil|Location2.X=2025.787mil|Location1.Y=4374.016mil|Location2.Y=4381.89mil|Absolute=True">Track (50mm,111.2mm)(51.355mm,111.2mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1944.819mil|Location2.X=2031.559mil|Location1.Y=4375.921mil|Location2.Y=4462.662mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1944.819mil|Location2.X=2031.559mil|Location1.Y=4375.921mil|Location2.Y=4462.662mil|Absolute=True">Pad C1-1(50.5mm,112.25mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2517.85mil|Location2.X=2553.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2517.85mil|Location2.X=2553.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U4-5(64.405mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2467.85mil|Location2.X=2503.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2467.85mil|Location2.X=2503.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U4-6(63.135mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2417.85mil|Location2.X=2453.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2417.85mil|Location2.X=2453.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U4-7(61.865mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2367.85mil|Location2.X=2403.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2367.85mil|Location2.X=2403.409mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U4-8(60.595mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1734.252mil|Location1.Y=4328.74mil|Location2.Y=4332.677mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1734.252mil|Location1.Y=4328.74mil|Location2.Y=4332.677mil|Absolute=True">Track (39mm,110mm)(44mm,110mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=4267.654mil|Location2.Y=4334.709mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=4267.654mil|Location2.Y=4334.709mil|Absolute=True">Pad P3-(41mm,109.25mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1685.039mil|Location1.Y=4328.74mil|Location2.Y=4332.677mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1685.039mil|Location1.Y=4328.74mil|Location2.Y=4332.677mil|Absolute=True">Track (39mm,110mm)(42.75mm,110mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=4267.654mil|Location2.Y=4334.709mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=4267.654mil|Location2.Y=4334.709mil|Absolute=True">Pad P3-(41mm,109.25mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1734.252mil|Location1.Y=3541.339mil|Location2.Y=3545.276mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1734.252mil|Location1.Y=3541.339mil|Location2.Y=3545.276mil|Absolute=True">Track (39mm,90mm)(44mm,90mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=3539.307mil|Location2.Y=3606.362mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=3539.307mil|Location2.Y=3606.362mil|Absolute=True">Pad P3-(41mm,90.75mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1681.102mil|Location1.Y=3541.339mil|Location2.Y=3545.276mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1533.464mil|Location2.X=1681.102mil|Location1.Y=3541.339mil|Location2.Y=3545.276mil|Absolute=True">Track (39mm,90mm)(42.65mm,90mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=3539.307mil|Location2.Y=3606.362mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1541.276mil|Location2.X=1687.071mil|Location1.Y=3539.307mil|Location2.Y=3606.362mil|Absolute=True">Pad P3-(41mm,90.75mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2321mil|Location2.X=2356.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2321mil|Location2.X=2356.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U2-5(59.405mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2271mil|Location2.X=2306.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2271mil|Location2.X=2306.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U2-6(58.135mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2221mil|Location2.X=2256.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2221mil|Location2.X=2256.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U2-7(56.865mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2111.142mil|Location2.X=2613.268mil|Location1.Y=4465.472mil|Location2.Y=4475.472mil|Absolute=True">Track (53.75mm,113.55mm)(66.25mm,113.55mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2171mil|Location2.X=2206.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2171mil|Location2.X=2206.559mil|Location1.Y=4415.213mil|Location2.Y=4486.205mil|Absolute=True">Pad U2-8(55.595mm,113.048mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2444.095mil|Location2.X=2499.46mil|Location1.Y=3268.898mil|Location2.Y=3305.897mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2444.095mil|Location2.X=2499.46mil|Location1.Y=3268.898mil|Location2.Y=3305.897mil|Absolute=True">Text "C4" (62.2mm,83.15mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2492.063mil|Location2.X=2527.622mil|Location1.Y=3246mil|Location2.Y=3328.803mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2492.063mil|Location2.X=2527.622mil|Location1.Y=3246mil|Location2.Y=3328.803mil|Absolute=True">Pad VR1-1(63.75mm,83.5mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2378.804mil|Location2.X=2474.58mil|Location1.Y=3696.015mil|Location2.Y=3748.93mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2378.804mil|Location2.X=2474.58mil|Location1.Y=3696.015mil|Location2.Y=3748.93mil|Absolute=True">Text "闭环" (60.55mm,94.15mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2388.519mil|Location2.X=2435.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2388.519mil|Location2.X=2435.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True">Pad S1-5(61.26999mm,95.936mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2260.748mil|Location2.X=2382.678mil|Location1.Y=3693.609mil|Location2.Y=3747.125mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2260.748mil|Location2.X=2382.678mil|Location1.Y=3693.609mil|Location2.Y=3747.125mil|Absolute=True">Text "细分2" (57.55mm,94.1mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2288.519mil|Location2.X=2335.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2288.519mil|Location2.X=2335.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True">Pad S1-3(58.72999mm,95.936mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2146.575mil|Location2.X=2268.832mil|Location1.Y=3693.609mil|Location2.Y=3747.125mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2146.575mil|Location2.X=2268.832mil|Location1.Y=3693.609mil|Location2.Y=3747.125mil|Absolute=True">Text "细分1" (54.65mm,94.1mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2188.519mil|Location2.X=2235.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2188.519mil|Location2.X=2235.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True">Pad S1-1(56.18999mm,95.936mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2467.441mil|Location2.X=2565.511mil|Location1.Y=3697.492mil|Location2.Y=3750.899mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2467.441mil|Location2.X=2565.511mil|Location1.Y=3697.492mil|Location2.Y=3750.899mil|Absolute=True">Text "校正" (62.8mm,94.2mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2488.519mil|Location2.X=2535.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2488.519mil|Location2.X=2535.89mil|Location1.Y=3733.638mil|Location2.Y=3820.378mil|Absolute=True">Pad S1-7(63.80999mm,95.936mm)  Top Layer</acronym></a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td style="width:50%; text-align:left" class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2249.213mil|Location2.X=2304.578mil|Location1.Y=4493.307mil|Location2.Y=4530.306mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2249.213mil|Location2.X=2304.578mil|Location1.Y=4493.307mil|Location2.Y=4530.306mil|Absolute=True">Text "U2" (57.25mm,114.25mm)  Top Overlay</acronym></a></td>
+<td style="width:50%; text-align:left" class="column2"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\%E5%AF%A1%E4%BA%BA%E5%B8%B8%E6%89%80%E7%94%A8%E8%B5%9A%E9%92%B1%E5%AE%9D%E5%A4%B9\HyperStepper%E6%AD%A5%E8%BF%9B%E8%BD%AF%E7%A1%AC%E4%BB%B6%E5%85%A8%E5%A5%97%E8%B5%84%E6%96%99\%E7%94%B5%E8%B7%AF%E5%9B%BE\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2288.52mil|Location2.X=2335.89mil|Location1.Y=4515.685mil|Location2.Y=4622.11mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Bruce\Desktop\寡人常所用赚钱宝夹\HyperStepper步进软硬件全套资料\电路图\20200601V16.0\42\Item.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2288.52mil|Location2.X=2335.89mil|Location1.Y=4515.685mil|Location2.Y=4622.11mil|Absolute=True">Pad P2-3(58.73mm,116.05mm)  Multi-Layer</acronym></a></td>
+</tr>
+</table></a><a href="#top">Back to top</a><br><br></body>
+</html>

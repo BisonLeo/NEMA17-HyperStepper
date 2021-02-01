@@ -1,0 +1,8 @@
+**/*.PrjPCBStructure
+**/*.htm
+**/__Previews/
+**/*.ini
+**/*.txt
+**/*.uvguix.*
+**/*.uvoptx
+**/DebugConfig/

@@ -295,9 +295,9 @@ void CalibrateEncoder(void);
 //int16_t ki=10;  
 //int16_t kd=100; 
 
-int16_t kp=60;     
-int16_t ki=5;  
-int16_t kd=80; 
+int16_t kp=300;     
+int16_t ki=2;  
+int16_t kd=300; 
 
 //低通滤波参数变量
 const uint8_t LPFA=110; 

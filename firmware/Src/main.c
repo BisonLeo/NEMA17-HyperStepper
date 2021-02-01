@@ -1,5 +1,5 @@
 #include "main.h"
-//sin cos º¯Êı²éÕÒ±í ¹²4096¸öÖµ
+//sin cos å‡½æ•°æŸ¥æ‰¾è¡¨ å…±4096ä¸ªå€¼
 const int16_t sin_1[] = 
 {
     0,      1,      3,      4,      6,      7,      9,     10,     12,     14,     15,     17,     18,     20,     21,     23,  
@@ -287,44 +287,47 @@ uint16_t FlashReadHalfWord(uint32_t faddr);
 int fputc(int c,FILE *stream); 
 int fgetc(FILE *stream); 
 void SerialCheck(void);
+uint16_t ReadValue(uint16_t RegValue);
+void WriteValue(uint16_t RegAdd,uint16_t RegValue);
+uint16_t ReadState(void);
 uint16_t ReadAngle(void);
 void CalibrateEncoder(void);
 
-//PID²ÎÊı±äÁ¿
-//int16_t kp=30;     
+//PIDå‚æ•°å˜é‡
+int16_t kp=30;     
+int16_t ki=10;  
+int16_t kd=100; 
+
+//int16_t kp=60;     
 //int16_t ki=10;  
-//int16_t kd=100; 
+//int16_t kd=200; 
 
-int16_t kp=300;     
-int16_t ki=2;  
-int16_t kd=300; 
+//ä½é€šæ»¤æ³¢å‚æ•°å˜é‡
+const uint8_t LPFA=125; 
+const uint8_t LPFB=3;
 
-//µÍÍ¨ÂË²¨²ÎÊı±äÁ¿
-const uint8_t LPFA=110; 
-const uint8_t LPFB=10;
-
-int32_t s=0;//Íâ²¿¿ØÖÆÂö³åÊäÈë¶¨Ê±Æ÷µÄÖµ
+int32_t s=0;//å¤–éƒ¨æ§åˆ¶è„‰å†²è¾“å…¥å®šæ—¶å™¨çš„å€¼
 int32_t s_1=0;
-int32_t s_sum=0;//Íâ²¿¿ØÖÆÂö³åÊäÈëÀÛ¼ÆÖµ
-int32_t r=0;//Ö¸Áîµç»úÎ»ÖÃ
+int32_t s_sum=0;//å¤–éƒ¨æ§åˆ¶è„‰å†²è¾“å…¥ç´¯è®¡å€¼
+int32_t r=0;//æŒ‡ä»¤ç”µæœºä½ç½®
 int32_t r_1=0;
-uint8_t dir=1;//µç»úĞı×ª·½Ïò
-int16_t y=0;//±àÂëÆ÷µÄ¶ÁÊıÖµ
+uint8_t dir=1;//ç”µæœºæ—‹è½¬æ–¹å‘
+int16_t y=0;//ç¼–ç å™¨çš„è¯»æ•°å€¼
 int16_t y_1=0;
-int32_t yw=0;//Êµ¼Êµç»úÎ»ÖÃÖµ
+int32_t yw=0;//å®é™…ç”µæœºä½ç½®å€¼
 int32_t yw_1=0;
-int32_t advance=0;//µç»ú¿ØÖÆÌáÇ°½Ç¶È
-int32_t wrap_count=0;//µç»úĞı×ªÈ¦Êı
-int32_t e=0;//Îó²îÖµµÈÓÚÖ¸Áîµç»úÎ»ÖÃÖµ¼õÈ¥Êµ¼Êµç»úÎ»ÖÃÖµ
-int32_t iterm=0;//PID¿ØÖÆi»ı·ÖÏî
-int32_t dterm=0;//PID¿ØÖÆdÎ¢·ÖÏî
-int32_t u=0;//Ê¸Á¿¿ØÖÆµçÁ÷´óĞ¡
-int32_t stepnumber=0;//µç»ú×ßµÄÕû²½²½Êı
-float stepangle=0.0f;//µç×Ó³İÂÖÖµ
+int16_t advance=0;//ç”µæœºæ§åˆ¶æå‰è§’åº¦
+int32_t wrap_count=0;//ç”µæœºæ—‹è½¬åœˆæ•°
+int32_t e=0;//è¯¯å·®å€¼ç­‰äºæŒ‡ä»¤ç”µæœºä½ç½®å€¼å‡å»å®é™…ç”µæœºä½ç½®å€¼
+int32_t iterm=0;//PIDæ§åˆ¶iç§¯åˆ†é¡¹
+int32_t dterm=0;//PIDæ§åˆ¶då¾®åˆ†é¡¹
+int16_t u=0;//çŸ¢é‡æ§åˆ¶ç”µæµå¤§å°
+int32_t stepnumber=0;//ç”µæœºèµ°çš„æ•´æ­¥æ­¥æ•°
+uint8_t stepangle=0;//ç”µå­é½¿è½®å€¼
 
-uint16_t hccount=0;//¿ª»·Ä£Ê½ÏÂ°ëÁ÷¿ØÖÆ¼ÆÊıÖµ
-uint8_t closemode;//¿ª»·±Õ»·Ä£Ê½±êÖ¾Î»
-uint8_t enmode=1;//Ê¹ÄÜ±êÖ¾Î»
+uint16_t hccount=0;//å¼€ç¯æ¨¡å¼ä¸‹åŠæµæ§åˆ¶è®¡æ•°å€¼
+uint8_t closemode;//å¼€ç¯é—­ç¯æ¨¡å¼æ ‡å¿—ä½
+uint8_t enmode=1;//ä½¿èƒ½æ ‡å¿—ä½
 
 int main(void)
 {
@@ -334,9 +337,9 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
-  MX_TIM1_Init();
   LL_mDelay(100);
   SetModeCheck();
+  MX_TIM1_Init();
   MX_TIM6_Init();
   MX_IWDG_Init();
   while(1)
@@ -370,7 +373,7 @@ void SystemClock_Config(void)
   LL_RCC_LSI_Enable();
   while(LL_RCC_LSI_IsReady() != 1)
   {}
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI_DIV_2, LL_RCC_PLL_MUL_16);
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI_DIV_2, LL_RCC_PLL_MUL_12);
   LL_RCC_PLL_Enable();
 	  
   while(LL_RCC_PLL_IsReady() != 1)
@@ -381,9 +384,9 @@ void SystemClock_Config(void)
 	  
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
   {}
-  LL_Init1msTick(64000000);
+  LL_Init1msTick(48000000);
   LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);
-  LL_SetSystemCoreClock(64000000);
+  LL_SetSystemCoreClock(48000000);
   LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK1);
   NVIC_SetPriority(SysTick_IRQn, 0);
 }
@@ -399,7 +402,7 @@ static void MX_IWDG_Init(void)
   {}
   LL_IWDG_ReloadCounter(IWDG);
 }
-//SPI³õÊ¼»¯º¯Êı£¬ÓÃÓÚºÍMT6816´«ÊäÊı¾İ
+//SPIåˆå§‹åŒ–å‡½æ•°ï¼Œç”¨äºå’ŒTLE5012ä¼ è¾“æ•°æ®
 static void MX_SPI1_Init(void)
 {
   LL_SPI_InitTypeDef SPI_InitStruct;
@@ -441,10 +444,10 @@ static void MX_SPI1_Init(void)
   SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
   SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
   SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_16BIT;
-  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_HIGH;
+  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
   SPI_InitStruct.ClockPhase = LL_SPI_PHASE_2EDGE;
   SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
-  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV4;
+  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV8;
   SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
   SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
   SPI_InitStruct.CRCPoly = 7;
@@ -452,7 +455,7 @@ static void MX_SPI1_Init(void)
   LL_SPI_SetStandard(SPI1, LL_SPI_PROTOCOL_MOTOROLA); 
   LL_SPI_Enable(SPI1); 
 }
-//¶¨Ê±Æ÷1¹¤×÷ÔÚÍâ²¿¼ÆÊıÆ÷Ä£Ê½£¬ÓÃÓÚ¶ÔÍâ²¿¿ØÖÆÂö³å½øĞĞ¼ÆÊı
+//å®šæ—¶å™¨1å·¥ä½œåœ¨å¤–éƒ¨è®¡æ•°å™¨æ¨¡å¼ï¼Œç”¨äºå¯¹å¤–éƒ¨æ§åˆ¶è„‰å†²è¿›è¡Œè®¡æ•°
 static void MX_TIM1_Init(void)
 {
   LL_TIM_InitTypeDef TIM_InitStruct = {0};
@@ -476,7 +479,7 @@ static void MX_TIM1_Init(void)
 
   TIM_InitStruct.Prescaler = 0;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 64999;
+  TIM_InitStruct.Autoreload = 0xFFFF;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
   TIM_InitStruct.RepetitionCounter = 0;
   LL_TIM_Init(TIM1, &TIM_InitStruct);
@@ -485,10 +488,9 @@ static void MX_TIM1_Init(void)
   LL_TIM_SetClockSource(TIM1, LL_TIM_CLOCKSOURCE_EXT_MODE2);
   LL_TIM_SetTriggerOutput(TIM1, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM1);
-  LL_TIM_SetCounter(TIM1,0);
   LL_TIM_EnableCounter(TIM1);
 }
-//¶¨Ê±Æ÷3ÓÃÓÚÉú³É¿ØÖÆA4950Ğ¾Æ¬µÄÁ½¸öÍ¨µÀµÄPWM²¨£¬Í¨¹ıRCµÍÍ¨ÂË²¨ËÍÈëA4950µçÑ¹²Î¿¼½Å
+//å®šæ—¶å™¨3ç”¨äºç”Ÿæˆæ§åˆ¶A4950èŠ¯ç‰‡çš„ä¸¤ä¸ªé€šé“çš„PWMæ³¢ï¼Œé€šè¿‡RCä½é€šæ»¤æ³¢é€å…¥A4950ç”µå‹å‚è€ƒè„š
 static void MX_TIM3_Init(void)
 {
   LL_TIM_InitTypeDef TIM_InitStruct;
@@ -519,7 +521,7 @@ static void MX_TIM3_Init(void)
 
   TIM_InitStruct.Prescaler = 0;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 320;//200khzµÄpwmÆµÂÊ
+  TIM_InitStruct.Autoreload = 256;//187.5khzçš„pwmé¢‘ç‡
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
   LL_TIM_Init(TIM3, &TIM_InitStruct);
 
@@ -554,7 +556,7 @@ static void MX_TIM3_Init(void)
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH2);
   LL_TIM_EnableCounter(TIM3);
 }
-//¶¨Ê±Æ÷6ÓÃÓÚÉú³ÉÎ»ÖÃ»·¿ØÖÆÖÜÆÚ
+//å®šæ—¶å™¨6ç”¨äºç”Ÿæˆä½ç½®ç¯æ§åˆ¶å‘¨æœŸ
 static void MX_TIM6_Init(void)
 {
   LL_TIM_InitTypeDef TIM_InitStruct;
@@ -565,7 +567,7 @@ static void MX_TIM6_Init(void)
 
   TIM_InitStruct.Prescaler = 0;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 3200;//20khzµÄÒç³öÖĞ¶ÏÆµÂÊ
+  TIM_InitStruct.Autoreload = 4800;//10khzçš„æº¢å‡ºä¸­æ–­é¢‘ç‡
   LL_TIM_Init(TIM6, &TIM_InitStruct);
 
   LL_TIM_DisableARRPreload(TIM6);
@@ -696,8 +698,8 @@ static void MX_GPIO_Init(void)
   LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTB, LL_SYSCFG_EXTI_LINE1);
   LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTB, LL_SYSCFG_EXTI_LINE2);
   
-  LL_GPIO_SetPinPull(DIRIN_GPIO_Port, DIRIN_Pin, LL_GPIO_PULL_NO);//·½Ïò¿ØÖÆĞÅºÅÍâ²¿¹Ü½ÅÖĞ¶Ï
-  LL_GPIO_SetPinPull(ENIN_GPIO_Port, ENIN_Pin, LL_GPIO_PULL_UP);//Ê¹ÄÜĞÅºÅÍâ²¿¹Ü½ÅÖĞ¶Ï
+  LL_GPIO_SetPinPull(DIRIN_GPIO_Port, DIRIN_Pin, LL_GPIO_PULL_NO);//æ–¹å‘æ§åˆ¶ä¿¡å·å¤–éƒ¨ç®¡è„šä¸­æ–­
+  LL_GPIO_SetPinPull(ENIN_GPIO_Port, ENIN_Pin, LL_GPIO_PULL_UP);//ä½¿èƒ½ä¿¡å·å¤–éƒ¨ç®¡è„šä¸­æ–­
   LL_GPIO_SetPinMode(DIRIN_GPIO_Port, DIRIN_Pin, LL_GPIO_MODE_INPUT);
   LL_GPIO_SetPinMode(ENIN_GPIO_Port, ENIN_Pin, LL_GPIO_MODE_INPUT);
 
@@ -721,51 +723,43 @@ static void MX_GPIO_Init(void)
 
 void SetModeCheck(void)
 {
-  y=*(volatile uint16_t*)(ReadAngle()*2+0x08008000);
-  if(CAL==0)//Ğ£Õı²¦Âë¿ª¹ØON½øÈë±àÂëÆ÷Ğ¾Æ¬Ğ£Õı³ÌĞò  
+  WriteValue(WRITE_MOD2_VALUE,MOD2_VALUE);
+  uint16_t state=ReadState();//è¯»ä¸€ä¸‹TLE5012çš„çŠ¶æ€å¯„å­˜å™¨
+  if(state&0x0080)//å¦‚æœæ£€æµ‹ä¸åˆ°ç£é“LEDä¼šé—ª10ä¸‹
+  {
+    for(uint8_t m=0;m<10;m++)
+    {
+      LED_H;
+	  LL_mDelay(200);
+	  LED_L;
+	  LL_mDelay(200);	
+    } 
+  }	
+  if(CAL==0)//æ ¡æ­£æ‹¨ç å¼€å…³ONè¿›å…¥ç¼–ç å™¨èŠ¯ç‰‡æ ¡æ­£ç¨‹åº  
 	CalibrateEncoder();
   
-  if((SET1==1)&&(SET2==1))//µç×Ó³İÂÖÉèÖÃ
-    stepangle=20.48f;//µç»úÅÜÒ»È¦ĞèÒªµÄ¿ØÖÆÂö³åÊıÎª800
+  if((SET1==1)&&(SET2==1))//ç”µå­é½¿è½®è®¾ç½®
+    stepangle=16;//ç”µæœºè·‘ä¸€åœˆéœ€è¦çš„æ§åˆ¶è„‰å†²æ•°ä¸º1024
   else if((SET1==0)&&(SET2==1))
-    stepangle=10.24f;//µç»úÅÜÒ»È¦ĞèÒªµÄ¿ØÖÆÂö³åÊıÎª1600
+    stepangle=8;//ç”µæœºè·‘ä¸€åœˆéœ€è¦çš„æ§åˆ¶è„‰å†²æ•°ä¸º2048
   else if((SET1==1)&&(SET2==0))
-    stepangle=5.12f;//µç»úÅÜÒ»È¦ĞèÒªµÄ¿ØÖÆÂö³åÊıÎª3200
+    stepangle=4;//ç”µæœºè·‘ä¸€åœˆéœ€è¦çš„æ§åˆ¶è„‰å†²æ•°ä¸º4096
   else
-    stepangle=2.56f;//µç»úÅÜÒ»È¦ĞèÒªµÄ¿ØÖÆÂö³åÊıÎª6400
-    
-	if(CLOSE==0)
-    closemode=1;
-  else
-	  closemode=0;
-	
-  if(DIRIN==1)
-    LL_TIM_SetCounterMode(TIM1,LL_TIM_COUNTERMODE_UP);
-  else
-	LL_TIM_SetCounterMode(TIM1,LL_TIM_COUNTERMODE_DOWN);
+    stepangle=2;//ç”µæœºè·‘ä¸€åœˆéœ€è¦çš„æ§åˆ¶è„‰å†²æ•°ä¸º8192
   
-  if(ENIN==1)
-  {
-	 	y=*(volatile uint16_t*)(ReadAngle()*2+0x08008000);
-	  s_sum=y;
-		s=0;
-	  s_1=0;
-    r=y;
-    r_1=r;
+  if(CLOSE==0)
+  {//é—­ç¯æ¨¡å¼ä¸‹ä¸€äº›å˜é‡çš„åˆå§‹åŒ–
+    closemode=1;
+	r=*(volatile uint16_t*)((ReadValue(READ_ANGLE_VALUE)>>1)*2+0x08008000);
+	s_sum=r;
+    y=r;
     y_1=y;
-	  yw=y;  
-	  yw_1=yw;
-		wrap_count=0;
-		LL_TIM_SetCounter(TIM1,0);
-	  LL_TIM_EnableCounter(TIM1);
-	  enmode=1;
-	}
+	yw=y;  
+	yw_1=yw;
+  }
   else
   {
-	  enmode=0;
-		LL_TIM_DisableCounter(TIM1);
-    LL_TIM_OC_SetCompareCH1(TIM3,0);  
-	  LL_TIM_OC_SetCompareCH2(TIM3,0);  
+	closemode=0;
   }
   NVIC_EnableIRQ(EXTI0_1_IRQn);
   NVIC_EnableIRQ(EXTI2_3_IRQn);
@@ -782,9 +776,9 @@ void Output(int32_t theta,uint8_t effort)
   int16_t angle_1;
   int16_t angle_2;
 		
-  float phase_multiplier=12.5f;//µç»úÅÜÒ»È¦¹²50¸öµçÏàÎ»½Ç/4
+  float phase_multiplier=12.5f;//ç”µæœºè·‘ä¸€åœˆå…±50ä¸ªç”µç›¸ä½è§’/4
 
-  angle_1=Mod(phase_multiplier*theta,4096);//±àÂëÆ÷¶Á³öµÄ»úĞµ½Ç×ª»»ÎªµçÏàÎ»½Ç
+  angle_1=Mod(phase_multiplier*theta,4096);//ç¼–ç å™¨è¯»å‡ºçš„æœºæ¢°è§’è½¬æ¢ä¸ºç”µç›¸ä½è§’
   angle_2=angle_1+1024;
   if(angle_2>4096)
     angle_2-=4096;
@@ -792,8 +786,8 @@ void Output(int32_t theta,uint8_t effort)
   sin_coil_A=sin_1[angle_1];
   sin_coil_B=sin_1[angle_2];
 
-  v_coil_A=effort*sin_coil_A/1024;//µç»úAÏàµÄÊ¸Á¿·Ö½âµçÁ÷
-  v_coil_B=effort*sin_coil_B/1024;//µç»úBÏàµÄÊ¸Á¿·Ö½âµçÁ÷
+  v_coil_A=effort*sin_coil_A/1024;//ç”µæœºAç›¸çš„çŸ¢é‡åˆ†è§£ç”µæµ
+  v_coil_B=effort*sin_coil_B/1024;//ç”µæœºBç›¸çš„çŸ¢é‡åˆ†è§£ç”µæµ
 	
   if(v_coil_A>=0)  
   {
@@ -820,7 +814,7 @@ void Output(int32_t theta,uint8_t effort)
     IN4_HIGH;    
   }
 }
-//µç»ú×ßÒ»Õû²½1.8¶Èº¯Êı
+//ç”µæœºèµ°ä¸€æ•´æ­¥1.8åº¦å‡½æ•°
 void OneStep(void)
 {          
   if(dir) 
@@ -828,10 +822,10 @@ void OneStep(void)
   else 
     stepnumber-=1;
   
-  Output(81.92f*stepnumber,50);//Èç¹ûĞ£ÕıÊ±µç»úÌ«´ó°Ñ80µÄÉèÖÃµç»ú¼Óµ½120×óÓÒ»òÕß¸ü´óĞ©
+  Output(81.92f*stepnumber,80);//å¦‚æœæ ¡æ­£æ—¶ç”µæœºå¤ªå¤§æŠŠ80çš„è®¾ç½®ç”µæœºåŠ åˆ°120å·¦å³æˆ–è€…æ›´å¤§äº›
   LL_mDelay(10);
 }
-//ÇóÄ£º¯Êı
+//æ±‚æ¨¡å‡½æ•°
 int16_t Mod(int32_t xMod,int16_t mMod) 
 {
   int16_t temp;
@@ -852,13 +846,13 @@ void UsDelay(uint16_t us)
 	us--;
   }
 }
-//µ¥Æ¬»úFLASH½âËø
+//å•ç‰‡æœºFLASHè§£é”
 void FlashUnlock(void)
 {
   FLASH->KEYR=FLASH_KEY1;
   FLASH->KEYR=FLASH_KEY2;
 }
-//µ¥Æ¬»úFLASH¼ÓËø
+//å•ç‰‡æœºFLASHåŠ é”
 void FlashLock(void)
 {
   FLASH->CR|=1<<7; 
@@ -892,7 +886,7 @@ uint8_t FlashWaitDone(uint16_t time)
     res=0xff;
   return res;
 }
-//µ¥Æ¬»úFLASH²Á³ıÒ»Ò³
+//å•ç‰‡æœºFLASHæ“¦é™¤ä¸€é¡µ
 uint8_t FlashErasePage(uint32_t paddr)
 {
   uint8_t res=0;
@@ -908,7 +902,7 @@ uint8_t FlashErasePage(uint32_t paddr)
   }
   return res;
 }
-//µ¥Æ¬»úFLASH²Á³ıºó32K
+//å•ç‰‡æœºFLASHæ“¦é™¤å32K
 void FlashErase32K(void)
 {
   FlashErasePage(0x08008000);
@@ -944,7 +938,7 @@ void FlashErase32K(void)
   FlashErasePage(0x0800F800); 
   FlashErasePage(0x0800FC00);
 }
-//µ¥Æ¬»úFLASHĞ´16Î»
+//å•ç‰‡æœºFLASHå†™16ä½
 uint8_t FlashWriteHalfWord(uint32_t faddr,uint16_t dat)
 {
   uint8_t  res;
@@ -961,12 +955,12 @@ uint8_t FlashWriteHalfWord(uint32_t faddr,uint16_t dat)
   }
   return res;
 }
-//µ¥Æ¬»úFLASH¶Á16Î»
+//å•ç‰‡æœºFLASHè¯»16ä½
 uint16_t FlashReadHalfWord(uint32_t faddr)
 {
   return *(volatile uint16_t*)faddr;
 }
-//STDIO.H´®¿ÚÊä³öÖØÔØº¯Êı
+//STDIO.Hä¸²å£è¾“å‡ºé‡è½½å‡½æ•°
 int fputc(int c,FILE *stream) 
 {	   
   LL_USART_TransmitData8(USART1,c);
@@ -974,16 +968,16 @@ int fputc(int c,FILE *stream)
   LL_USART_ClearFlag_TC(USART1); 
   return c;
 }
-//STDIO.H´®¿ÚÊäÈëÖØÔØº¯Êı
+//STDIO.Hä¸²å£è¾“å…¥é‡è½½å‡½æ•°
 int fgetc(FILE *stream) 
 {
   while(!LL_USART_IsActiveFlag_RXNE(USART1)) __NOP();
   return ((char)LL_USART_ReceiveData8(USART1));
 }
-//¼òµ¥µÄASICC¿ØÖÆĞ­Òé£¬¿ÉÒÔÖ±½ÓÊ¹ÓÃprintfºÍscanfº¯Êı½øĞĞÀ©Õ¹
+//ç®€å•çš„ASICCæ§åˆ¶åè®®ï¼Œå¯ä»¥ç›´æ¥ä½¿ç”¨printfå’Œscanfå‡½æ•°è¿›è¡Œæ‰©å±•
 void SerialCheck(void) 
 {        
-  printf("----- HyperStepper 20190829 -----\r\n");
+  printf("----- HyperStepper 20180829 -----\r\n");
   uint8_t quit=0;
   char command;
   while(!quit)
@@ -1030,28 +1024,49 @@ void SerialCheck(void)
     }
   }
 }
-
-//¶ÁMT6816±àÂëÆ÷µÄ½Ç¶ÈÖµ
-uint16_t ReadAngle()
+//è¯»TLE5012ç¼–ç å™¨çš„å¯„å­˜å™¨
+uint16_t ReadValue(uint16_t RegAdd)
 {
-  uint16_t data1,data2;
+  uint16_t data;
   NSS_L;
   while(LL_SPI_IsActiveFlag_TXE(SPI1)==0);
-  LL_SPI_TransmitData16(SPI1,0x8355);
+  LL_SPI_TransmitData16(SPI1,RegAdd);
   while(LL_SPI_IsActiveFlag_RXNE(SPI1)==0);
-  data1=LL_SPI_ReceiveData16(SPI1)&0x00FF;
-  NSS_H;
-  NSS_L;
+  data=LL_SPI_ReceiveData16(SPI1);
+  SPI_TX_OD;
   while(LL_SPI_IsActiveFlag_TXE(SPI1)==0);
-  LL_SPI_TransmitData16(SPI1,0x84A0);
+  LL_SPI_TransmitData16(SPI1,0xFFFF);
   while(LL_SPI_IsActiveFlag_RXNE(SPI1)==0);
-  data2=LL_SPI_ReceiveData16(SPI1)&0x00FF;
+  data=LL_SPI_ReceiveData16(SPI1)&0x7FFF;
   NSS_H;
-  data1=(data1<<6)+(data2>>2);
-  return data1;
+  SPI_TX_PP;
+  return data;
 }
-
-//±àÂëÆ÷Ğ£Õıº¯Êı
+//å†™TLE5012ç¼–ç å™¨çš„å¯„å­˜å™¨
+void WriteValue(uint16_t RegAdd,uint16_t RegValue)
+{
+  NSS_L;
+  while(LL_SPI_IsActiveFlag_TXE(SPI1)==0);
+  LL_SPI_TransmitData16(SPI1,RegAdd);
+  while(LL_SPI_IsActiveFlag_RXNE(SPI1)==0);
+  LL_SPI_ReceiveData16(SPI1);
+  while(LL_SPI_IsActiveFlag_TXE(SPI1)==0);
+  LL_SPI_TransmitData16(SPI1,RegValue);
+  while(LL_SPI_IsActiveFlag_RXNE(SPI1)==0);
+  LL_SPI_ReceiveData16(SPI1);
+  NSS_H;
+}
+//è¯»TLE5012ç¼–ç å™¨çš„çŠ¶æ€å¯„å­˜å™¨
+uint16_t ReadState(void)
+{
+  return (ReadValue(READ_STATUS));
+}
+//è¯»TLE5012ç¼–ç å™¨çš„è§’åº¦å€¼
+uint16_t ReadAngle(void)
+{
+  return (ReadValue(READ_ANGLE_VALUE)>>1);
+}
+//ç¼–ç å™¨æ ¡æ­£å‡½æ•°
 void CalibrateEncoder(void) 
 {   
   int32_t encoderReading=0;    
@@ -1062,14 +1077,14 @@ void CalibrateEncoder(void)
   int32_t jStart=0;
   int32_t stepNo=0;
   
-  int32_t fullStepReadings[200];//Ò»È¦200Õû²½µÄ±àÂëÆ÷ÖµÊı×é
+  int32_t fullStepReadings[200];//ä¸€åœˆ200æ•´æ­¥çš„ç¼–ç å™¨å€¼æ•°ç»„
   int32_t ticks=0;	
-  uint32_t address=0x08008000;//Ğ´ÈëFLASHµÄÆğÊ¹µØÖ·
+  uint32_t address=0x08008000;//å†™å…¥FLASHçš„èµ·ä½¿åœ°å€
 
   uint16_t lookupAngle;
 		
   dir=1; 
-  Output(0,80);//¿ªÊ¼Ê±¹Ì¶¨ÔÚÕû²½Î»ÖÃ£¬Èç¹ûĞ£ÕıÊ±µç»úÌ«´ó°Ñ80µÄÉèÖÃµç»ú¼Óµ½120×óÓÒ»òÕß¸ü´óĞ©
+  Output(0,80);//å¼€å§‹æ—¶å›ºå®šåœ¨æ•´æ­¥ä½ç½®ï¼Œå¦‚æœæ ¡æ­£æ—¶ç”µæœºå¤ªå¤§æŠŠ80çš„è®¾ç½®ç”µæœºåŠ åˆ°120å·¦å³æˆ–è€…æ›´å¤§äº›
   for(uint8_t m=0;m<4;m++)
   {
     LED_H;
@@ -1077,7 +1092,7 @@ void CalibrateEncoder(void)
     LED_L;
 	LL_mDelay(250);	
   } 
-  for(int16_t x=0;x<=199;x++)//ÄæÊ±ÕëÅÜÒ»È¦¼ÇÏÂ¸÷Õû²½Î»µÄÖµ
+  for(int16_t x=0;x<=199;x++)//é€†æ—¶é’ˆè·‘ä¸€åœˆè®°ä¸‹å„æ•´æ­¥ä½çš„å€¼
   {    
     encoderReading=0;
    	LL_mDelay(20);                     
@@ -1101,12 +1116,12 @@ void CalibrateEncoder(void)
       encoderReading+=16384;
     fullStepReadings[x]=encoderReading;  
     OneStep();
-	LL_mDelay(50); 
+	LL_mDelay(100); 
   }
   dir=0; 
   OneStep();
   LL_mDelay(1000); 
-  for(int16_t x=199;x>=0;x--)//Ë³Ê±ÕëÅÜÒ»È¦¼ÇÏÂ¸÷Õû²½Î»µÄÖµºÍÖ®Ç°ÄæÊ±Õë±£´æµÄÖµÇóÆ½¾ù
+  for(int16_t x=199;x>=0;x--)//é¡ºæ—¶é’ˆè·‘ä¸€åœˆè®°ä¸‹å„æ•´æ­¥ä½çš„å€¼å’Œä¹‹å‰é€†æ—¶é’ˆä¿å­˜çš„å€¼æ±‚å¹³å‡
   {    
     encoderReading=0;
    	LL_mDelay(20);                     
@@ -1130,11 +1145,11 @@ void CalibrateEncoder(void)
       encoderReading+=16384;
     fullStepReadings[x]=(fullStepReadings[x]+encoderReading)/2;  
     OneStep();
-	LL_mDelay(50); 
+	LL_mDelay(100); 
   }
   LL_TIM_OC_SetCompareCH1(TIM3,0);  
   LL_TIM_OC_SetCompareCH2(TIM3,0); 
-  for(uint8_t i=0;i<200;i++)//Ëã³ö200Õû²½¼äµÄ²åÖµÊı
+  for(uint8_t i=0;i<200;i++)//ç®—å‡º200æ•´æ­¥é—´çš„æ’å€¼æ•°
   {
     ticks=fullStepReadings[(i+1)%200]-fullStepReadings[i%200];
     if(ticks<-15000) 
@@ -1153,7 +1168,7 @@ void CalibrateEncoder(void)
   }
   FlashUnlock();
   FlashErase32K();
-  for(int32_t i=iStart;i<(iStart+200+1);i++)//ÒÔ²½½øµç»úÕû²½Îª»ù×¼£¨Ğ¡ÓÚ0.08¶È£©¿ªÊ¼¶Ô±àÂëÆ÷½øĞĞĞ£Õı²åÖµ²¢½«Ğ£ÕıºóµÄÖµ´æÈëFLASH
+  for(int32_t i=iStart;i<(iStart+200+1);i++)//ä»¥æ­¥è¿›ç”µæœºæ•´æ­¥ä¸ºåŸºå‡†ï¼ˆå°äº0.08åº¦ï¼‰å¼€å§‹å¯¹ç¼–ç å™¨è¿›è¡Œæ ¡æ­£æ’å€¼å¹¶å°†æ ¡æ­£åçš„å€¼å­˜å…¥FLASH
   {
 	ticks=fullStepReadings[(i+1)%200]-fullStepReadings[i%200];
     if(ticks<-15000) 

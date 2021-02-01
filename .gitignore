@@ -6,3 +6,4 @@
 **/*.uvguix.*
 **/*.uvoptx
 **/DebugConfig/
+**/*.tmp

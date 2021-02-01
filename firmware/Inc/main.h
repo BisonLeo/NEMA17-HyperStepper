@@ -97,9 +97,9 @@
 #define NSS_L   LL_GPIO_ResetOutputPin(NSS_GPIO_Port, NSS_Pin) 
 
 
-#define UMAXCL   250    //±Õ»·Ä£Ê½×î´óµçÁ÷ÉèÖÃ£¬0.1Å·Ä·²ÉÑùµç×è255¶ÔÓ¦3.3AµçÁ÷
-#define UMAXOP   160    //¿ª»·Ä£Ê½×î´óµçÁ÷ÉèÖÃ£¬0.1Å·Ä·²ÉÑùµç×è255¶ÔÓ¦3.3AµçÁ÷
-#define UMAXSUM  32000  //±Õ»·Ä£Ê½×î´óµçÁ÷x128£¬ÓÃÓÚ»ý·ÖÏîÄ¿±¥ºÍÏÞÖÆ
+#define UMAXCL   250    //é—­çŽ¯æ¨¡å¼æœ€å¤§ç”µæµè®¾ç½®ï¼Œ0.1æ¬§å§†é‡‡æ ·ç”µé˜»255å¯¹åº”3.3Aç”µæµ
+#define UMAXOP   160    //å¼€çŽ¯æ¨¡å¼æœ€å¤§ç”µæµè®¾ç½®ï¼Œ0.1æ¬§å§†é‡‡æ ·ç”µé˜»255å¯¹åº”3.3Aç”µæµ
+#define UMAXSUM  32000  //é—­çŽ¯æ¨¡å¼æœ€å¤§ç”µæµx128ï¼Œç”¨äºŽç§¯åˆ†é¡¹ç›®é¥±å’Œé™åˆ¶
 
 
 extern int16_t kp;     

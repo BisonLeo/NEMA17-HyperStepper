@@ -26,7 +26,7 @@ void SysTick_Handler(void)
 {
 }
 
-//¸ù¾İ·½Ïò¿ØÖÆĞÅºÅ¸Ä±ä¼ÆÊıÆ÷µÄÉÏÏÂ¼ÆÊı·½Ïò
+//æ ¹æ®æ–¹å‘æ§åˆ¶ä¿¡å·æ”¹å˜è®¡æ•°å™¨çš„ä¸Šä¸‹è®¡æ•°æ–¹å‘
 void EXTI0_1_IRQHandler(void)
 {
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_1) != RESET)
@@ -38,7 +38,7 @@ void EXTI0_1_IRQHandler(void)
 			LL_TIM_SetCounterMode(TIM1,LL_TIM_COUNTERMODE_DOWN);
   }
 }
-//µç»úÊ¹ÄÜĞÅºÅÍâ²¿ÖĞ¶Ïº¯Êı
+//ç”µæœºä½¿èƒ½ä¿¡å·å¤–éƒ¨ä¸­æ–­å‡½æ•°
 void EXTI2_3_IRQHandler(void)
 {
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_2) != RESET)
@@ -76,27 +76,27 @@ void TIM6_IRQHandler(void)
   if(LL_TIM_IsActiveFlag_UPDATE(TIM6) == 1)
   {
 	LL_TIM_ClearFlag_UPDATE(TIM6);
-	LL_IWDG_ReloadCounter(IWDG);//Çå¿´ÃÅ¹·
+	LL_IWDG_ReloadCounter(IWDG);//æ¸…çœ‹é—¨ç‹—
     if(enmode==1)
 	{
 	  if(closemode==1) 
 	  {    
-		y=*(volatile uint16_t*)(ReadAngle()*2+0x08008000);//¶Á³ö±àÂëÆ÷µÄ½Ç¶ÈÎ»ÖÃÖµ
-        s=LL_TIM_GetCounter(TIM1);//¶Á³ö¼ÆÊıÆ÷¼ÆÊıµÄÍâ²¿step¿ØÖÆÂö³åÊı
+		y=*(volatile uint16_t*)(ReadAngle()*2+0x08008000);//è¯»å‡ºç¼–ç å™¨çš„è§’åº¦ä½ç½®å€¼
+        s=LL_TIM_GetCounter(TIM1);//è¯»å‡ºè®¡æ•°å™¨è®¡æ•°çš„å¤–éƒ¨stepæ§åˆ¶è„‰å†²æ•°
 	    if(s-s_1<-32500)
 		  s_sum+=stepangle*65000;
 	    else if(s-s_1>32500)
 	      s_sum-=stepangle*65000;
-		r=s_sum+stepangle*s;//Òç³ö´¦Àíºó¸ù¾İµç×Ó³İÂÖËã³öÖ¸Áîµç»úÎ»ÖÃ
+		r=s_sum+stepangle*s;//æº¢å‡ºå¤„ç†åæ ¹æ®ç”µå­é½¿è½®ç®—å‡ºæŒ‡ä»¤ç”µæœºä½ç½®
 	    s_1=s;
 		
         if(y-y_1>8192) 
 	      wrap_count--;      
         else if(y-y_1<-8192) 
 	      wrap_count++; 
-        yw=y+16384*wrap_count;//±àÂëÆ÷µÄ½Ç¶ÈÎ»ÖÃÖµÒç³ö´¦Àíºó¸ù¾İÈ¦ÊıËã³öÊµ¼Êµç»úÎ»ÖÃÖµ            
-	    e=r-yw;//Îó²îÖµ
-        if(e>1638)//Îó²îÖµ´óĞ¡ÏŞÖÆ
+        yw=y+16384*wrap_count;//ç¼–ç å™¨çš„è§’åº¦ä½ç½®å€¼æº¢å‡ºå¤„ç†åæ ¹æ®åœˆæ•°ç®—å‡ºå®é™…ç”µæœºä½ç½®å€¼            
+	    e=r-yw;//è¯¯å·®å€¼
+        if(e>1638)//è¯¯å·®å€¼å¤§å°é™åˆ¶
         {
 		  e=1638;
 		  LED_H;
@@ -109,15 +109,15 @@ void TIM6_IRQHandler(void)
 		else
           LED_L;
 			
-        iterm+=ki*e/32;//»ı·ÖÏî¼ÆËã
-		if(iterm>UMAXSUM) //»ı·Ö±¥ºÍÏŞÖÆ
+        iterm+=ki*e/32;//ç§¯åˆ†é¡¹è®¡ç®—
+		if(iterm>UMAXSUM) //ç§¯åˆ†é¥±å’Œé™åˆ¶
 	      iterm=UMAXSUM;
         else if(iterm<-UMAXSUM) 
 		  iterm=-UMAXSUM; 
     
             
-        dterm=LPFA*dterm/128-LPFB*kd*(yw-yw_1)/8;//Î¢·ÖÏî¼ÆËã
-        u=(kp*e+iterm+dterm)/128;//PIDÈıÏî¼ÆËãÖµ
+        dterm=LPFA*dterm/128-LPFB*kd*(yw-yw_1)/8;//å¾®åˆ†é¡¹è®¡ç®—
+        u=(kp*e+iterm+dterm)/128;//PIDä¸‰é¡¹è®¡ç®—å€¼
 	    
 		advance=(yw-yw_1)*3;
         y_1=y;  
@@ -125,7 +125,7 @@ void TIM6_IRQHandler(void)
 	
 		if(u>0)            
         {		  
-		  y+=(82+advance);//µçÁ÷Ê¸Á¿µÈÓÚ1.8¶È¼ÓÉÏÇ°À¡½Ç
+		  y+=(82+advance);//ç”µæµçŸ¢é‡ç­‰äº1.8åº¦åŠ ä¸Šå‰é¦ˆè§’
 		}
         else if(u<0)
         {
@@ -133,7 +133,7 @@ void TIM6_IRQHandler(void)
 		  u=-u;
 		}
         if(u>UMAXCL)     
-		  u=UMAXCL;//µçÁ÷Ê¸Á¿×î´óÖµÏŞÖÆ
+		  u=UMAXCL;//ç”µæµçŸ¢é‡æœ€å¤§å€¼é™åˆ¶
         Output(y,u);    
       }          
       else 
@@ -155,7 +155,7 @@ void TIM6_IRQHandler(void)
 		else
 		  hccount=0;
 		
-        if(hccount>=10000)//1s×Ô¶¯½øÈë°ëÁ÷Ä£Ê½
+        if(hccount>=10000)//1sè‡ªåŠ¨è¿›å…¥åŠæµæ¨¡å¼
 		  Output(r,UMAXOP/2);
 		else
 		  Output(r,UMAXOP);

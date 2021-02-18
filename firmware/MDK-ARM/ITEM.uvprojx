@@ -402,6 +402,16 @@
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
             </File>
+            <File>
+              <FileName>ringBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\ringBuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>ringBuffer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\ringBuffer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

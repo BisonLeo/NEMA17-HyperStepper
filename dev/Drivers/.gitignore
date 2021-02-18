@@ -1,0 +1,10 @@
+DSP
+RTOS
+RTOS2
+NN
+Lib
+**/*template.h
+**/Templates
+**/*_conf_template.h
+**/*_template.c
+**/Template

@@ -155,7 +155,7 @@ void TIM6_IRQHandler(void)
 		else
 		  hccount=0;
 		
-        if(hccount>=10000)//1s自动进入半流模式
+    if(hccount>=10000)//1s自动进入半流模式
 		  Output(r,UMAXOP/2);
 		else
 		  Output(r,UMAXOP);
